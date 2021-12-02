@@ -1,7 +1,7 @@
 export interface Userdata {
     name :string;
-    email  : string;
     phone  : number;
+    email  : string;
     password: string;
   
   }

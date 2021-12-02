@@ -6,6 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DashboardComponent } from './dashboard.component';
 
 import { DashboardRoutes } from './dashboard.routing';
+// import { DataTablesModule } from 'angular-datatables';
 
 
 

@@ -28,6 +28,7 @@ export class RegisterComponent implements OnInit{
     nativeElement: any
     element: any;
     componentStatusSub: any;
+			componentStatus :any
    
     btnButton: { label: string; method: string; };
 
@@ -59,9 +60,9 @@ export class RegisterComponent implements OnInit{
 
 		this.userForm = this.formBuilder.group({
 			name  : new FormControl(null, Validators.required),
+            phone  : new FormControl('', [Validators.pattern("^[0-9]*$"), Validators.minLength(10), Validators.maxLength(10)]),
 			email  : new FormControl(null, Validators.email),
-			phone  : new FormControl('', [Validators.pattern("^[0-9]*$"), Validators.minLength(10), Validators.maxLength(10)]),
-		   password: new FormControl('',Validators.required)
+		    password: new FormControl('',Validators.minLength(6))
 		});
     }
     get userControl() {
@@ -83,11 +84,14 @@ export class RegisterComponent implements OnInit{
 			this.pagesService.createUser(this.userForm.value)
 			.then(user_res => {
 				this.isLoading = false;
+                console.log('inside create');
+                
 				this.ngOnInit();			
 			})
 			.catch(err => {
 				this.isLoading = false;
 				console.log(err);
+                
 			});
 		}
 	}

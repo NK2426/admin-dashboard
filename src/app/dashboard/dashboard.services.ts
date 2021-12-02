@@ -4,8 +4,7 @@ import { Router } from "@angular/router";
 import { Subject } from "rxjs";
 import { environment } from "../../environments/environment";
 
-
-const BACKEND_URL = environment.apiUrl + "";
+const BACKEND_URL = environment.apiUrl + "/user";
 
 @Injectable({ providedIn: "root" })
 export class DashboardService {
@@ -18,7 +17,19 @@ export class DashboardService {
 
   constructor(private http: HttpClient, private router: Router) {}
 
- 
+  readUser = async(query?: any) => new Promise<any>((resolve, rejects) => {
+    this.http.get<any>(BACKEND_URL + "/" + (query ? query :''))
+    .subscribe(
+      response => {
+        resolve(response);   
+        console.log(response);
+             
+      },
+      error => {
+        rejects(error);
+      }
+    );
+  })
 
   
 }

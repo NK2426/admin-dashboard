@@ -4,11 +4,11 @@
 
 <div class="sidebar-wrapper">
         <ul class="nav">
-            <li routerLinkActive="actihttp://localhost:4200/#/dashboardve" *ngFor="let menuitem of menuItems">
+            <li *ngFor="let menuitem of menuItems">
                 <!--If is a single link-->
                 <a [routerLink]="[menuitem.path]" *ngIf="menuitem.type === 'link'">
                     <i class="{{menuitem.icontype}}"></i>
-                    <p>{{menuitem.title}}</p>
+                    <p class="navbar-brand">{{menuitem.title}}</p>
                 </a>
             </li>
         </ul>

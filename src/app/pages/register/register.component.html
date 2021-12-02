@@ -68,7 +68,7 @@
                         <i class="nc-icon nc-email-85"></i>
                       </span>
                     </div>
-                    <input type="text" formControlName="password" id="password" class="form-control form-rounded" placeholder="Password" [ngClass]="{ 'is-invalid': submitted && userControl.name.errors }"> 
+                    <input type="password" formControlName="password" id="password" class="form-control form-rounded" placeholder="Password" [ngClass]="{ 'is-invalid': submitted && userControl.name.errors }"> 
                     <div *ngIf="submitted && userControl.password.errors" class="invalid-feedback">
                         <div *ngIf="userControl.password.errors.required">This field is mandatory</div>
                     </div>

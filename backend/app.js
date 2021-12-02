@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 
 const userRoutes = require("./routes/user");
-
+const cors = require('cors')
 const app = express();
 
 mongoose.connect(
@@ -29,7 +29,8 @@ mongoose.connection
  * extended - true (default) => any type
 */ 
 app.use(bodyParser.json({ limit: '100mb' }));
-app.use(bodyParser.urlencoded({ extended: true })); 
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors()); 
 app.use('/images', express.static(path.join("backend/images")));
 
 //############################################################################################

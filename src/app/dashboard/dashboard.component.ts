@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import Chart from 'chart.js';
+import { AuthService } from 'app/auth/auth.service';
+
+import { DashboardService } from './dashboard.services';
 
 declare const $: any;
 
@@ -8,8 +10,28 @@ declare const $: any;
   templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent implements OnInit {
+  
+  user:[];
+  userId: any;
+
+  constructor(public authService:AuthService) {}
   ngOnInit(): void {
-    throw new Error('Method not implemented.');
-  }
- 
+    console.log("df");
+
+    this.userId = this.authService.getUserId();  
+    console.log(this.userId)
+
+   
+    
+   
+  // this.dashboardService.readUser()
+  // .then(user_res => {
+  //   this.user = user_res;
+  //   console.log(user_res);
+    
+  // })
+  // .catch(err => {
+  //   console.log(err);
+  // });
+}
   }

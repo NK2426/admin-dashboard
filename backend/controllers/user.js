@@ -1,21 +1,34 @@
 const bcrypt = require('bcrypt');
 const jwt  = require('jsonwebtoken');
+const { reset } = require('nodemon');
 
-var User = require('../models/user');
+var userModel = require('../models/user');
+
 
 exports.userLogin = (req, res, next) => {
     let fetchedUser;
-    User.findOne({ email: req.body.email })
+    userModel.findOne({ email: req.body.email })
     .then(usr => {
         if (!usr) {
           return res.status(401).json({
+            
             message: "Auth failed"
+            
           });
         }
         fetchedUser = usr;
-        return bcrypt.compare(req.body.password, usr.password);
+         salt=10;
+        
+        bcrypt.hash(usr.password, salt, function(err, hash) {
+          if (err) return next(err);
+          // override the cleartext password with the hashed one
+          usr.password = hash;
+          next();
+      });
+        return bcrypt.compare(req.body.password, hash);
     })
     .then(result => {
+      console.log(result);
       if (!result) {
         return res.status(401).json({
           message: "Auth failed"
@@ -27,16 +40,18 @@ exports.userLogin = (req, res, next) => {
         expiresIn: 3600,
         userId: fetchedUser._id
       });
+      console.log('user',usr.name)
     })
     .catch(err => {
         console.log(err);
+        console.log("error")
         return res.send(err);
     });
   }
  
   exports.userLogout = (req, res, next) => {
     let fetchedUser;
-    User.findOne({ email: req.body.email })
+    userModel.findOne({ email: req.body.email })
     .then(usr => {
       if(!usr){
         console.log("logout failure");
@@ -46,6 +61,7 @@ exports.userLogin = (req, res, next) => {
         console.log("logout success");
       }
         fetchedUser = usr;
+        
         return bcrypt.compare(req.body.password, usr.password);
     })
     .catch(err => {
@@ -55,28 +71,32 @@ exports.userLogin = (req, res, next) => {
   }
   exports.userCreate = (req, res, next) => {
     req.body.active = true;
-    userModel.create(req.body, (err, r_staff) => {
+    userModel.create(req.body, (err, r_user) => {
         if(err) {
             console.log(err);
             res.status(503).send(err);
         } else {
-            res.send(r_staff);
+            res.send(r_user);
         }
     });
 }
 
 exports.readUser = (req, res, next) => {
   let _query = {};
+  
   if(Object.keys(req.query).length) {
       _query = req.query;
       if(_query.active) _query.active = _query.active === 'true' ? true : false;
-  }    
-  userModel.find(_query, (err, r_user) => {
+  }   userModel.find(_query, (err, r_user) => {
+   
       if(err) {
           console.log(err);
           res.status(503).send(err);
       } else {
           res.send(r_user);
+          // console.log(r_user);
+          reset()
       }
   });
 }
+

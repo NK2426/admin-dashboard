@@ -29,6 +29,7 @@ export class DashboardService {
         
       },
       error => {
+        
         rejects(error);
       }
     );

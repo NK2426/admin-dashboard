@@ -18,6 +18,25 @@ export class DashboardService {
   constructor(private http: HttpClient, private router: Router) {}
 
   readUser = async(query?: any) => new Promise<any>((resolve, rejects) => {
+    console.log("insidde service");
+    
+    this.http.get<any>(BACKEND_URL + "/register" + (query ? query :''))
+    .subscribe(
+      response => {
+        resolve(response);   
+        console.log(response);
+        
+        
+      },
+      error => {
+        rejects(error);
+      }
+    );
+  })
+
+  
+  readLogin = async(query?: any) => new Promise<any>((resolve, rejects) => {
+    console.log("insidde service");
     this.http.get<any>(BACKEND_URL + "/" + (query ? query :''))
     .subscribe(
       response => {

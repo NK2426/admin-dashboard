@@ -3,6 +3,7 @@ const jwt  = require('jsonwebtoken');
 const { reset } = require('nodemon');
 
 var userModel = require('../models/user');
+var loginModel = require('../models/login');
 
 
 exports.userLogin = (req, res, next) => {
@@ -34,12 +35,23 @@ exports.userLogin = (req, res, next) => {
           message: "Auth failed"
         });
       }
+     
       const token = jwt.sign({userId: fetchedUser._id }, process.env.JWT_KEY, { expiresIn: "1h" });
       res.status(200).json({
         token: token,
         expiresIn: 3600,
         userId: fetchedUser._id
       });
+       req.body.active = true;
+    loginModel.create(req.body, (err, r_login) => {
+      if(err) {
+        console.log("hrer");
+          console.log(err);
+          res.status(503).send(err);
+      } else {
+          res.send(r_login);
+      }
+  });
       console.log('user',usr.name)
     })
     .catch(err => {
@@ -47,6 +59,7 @@ exports.userLogin = (req, res, next) => {
         console.log("error")
         return res.send(err);
     });
+   
   }
  
   exports.userLogout = (req, res, next) => {
@@ -81,13 +94,13 @@ exports.userLogin = (req, res, next) => {
     });
 }
 
-exports.readUser = (req, res, next) => {
+exports.readLogin = (req, res, next) => {
   let _query = {};
   
   if(Object.keys(req.query).length) {
       _query = req.query;
       if(_query.active) _query.active = _query.active === 'true' ? true : false;
-  }   userModel.find(_query, (err, r_user) => {
+  }   loginModel.find(_query, (err, r_user) => {
    
       if(err) {
           console.log(err);
@@ -98,5 +111,31 @@ exports.readUser = (req, res, next) => {
           reset()
       }
   });
+}
+exports.readRegister = (req, res, next) => {
+  console.log("inside");
+  let _query = {};
+  
+  if(Object.keys(req.query).length) {
+      _query = req.query;
+      console.log("req query",req.query);
+      if(_query.active) _query.active = _query.active === 'true' ? true : false;
+      
+        if(req.body.email) _query.email = {$in: req.body.email.map((item) => new RegExp(item, 'i'))};
+      
+      
+  }
+  console.log("query",_query);   
+  userModel.find(_query, (err, r_user) => {
+   
+      if(err) {
+          console.log(err);
+          res.status(503).send(err);
+      } else {
+          res.send(r_user);
+          // console.log(r_user);
+          reset()
+      }
+  }); 
 }
 
